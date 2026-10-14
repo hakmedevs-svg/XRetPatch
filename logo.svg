@@ -1,0 +1,36 @@
+document.addEventListener("DOMContentLoaded", () => {
+  const year = document.getElementById("year");
+  if (year) {
+    year.textContent = new Date().getFullYear();
+  }
+
+  const revealItems = document.querySelectorAll(".reveal");
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("visible");
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.12 }
+  );
+
+  revealItems.forEach((item) => observer.observe(item));
+
+  const logoShell = document.querySelector(".logo-shell");
+  if (logoShell) {
+    logoShell.addEventListener("pointermove", (event) => {
+      const rect = logoShell.getBoundingClientRect();
+      const x = ((event.clientX - rect.left) / rect.width - 0.5) * 12;
+      const y = ((event.clientY - rect.top) / rect.height - 0.5) * 12;
+      logoShell.style.transform = `perspective(1000px) rotateX(${-y}deg) rotateY(${x}deg)`;
+    });
+
+    logoShell.addEventListener("pointerleave", () => {
+      logoShell.style.transform = "perspective(1000px) rotateX(0deg) rotateY(0deg)";
+    });
+  }
+});
